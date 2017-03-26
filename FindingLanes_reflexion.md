@@ -8,9 +8,7 @@
 [image3]: ./steps_images/solidWhiteRight_gray_blur.jpg "Blurred"
 [image4]: ./steps_images/solidWhiteRight_canny.jpg "Edges"
 [image5]: ./steps_images/solidWhiteRight_crop.jpg "Cropped"
-[image6]: ./output_images/solidWhiteRight_output.jpg "solidWhiteCurve Output"
-
-
+[image6]: ./test_images_output/solidWhiteRight_output.jpg "solidWhiteCurve Output"
 
 
 ---
@@ -43,8 +41,10 @@ My pipeline consisted of 5 steps:
 ![alt text][image5]
 
 * Step 5: I run a hough transform  to define the lines of edges and then draw a signle line for each side on the lane.
+![alt text][image6]
 
-I used the thershold suggested in the Quiz solutions for the functions used in these steps. The main modification to the code provided was in the draw\_lines() function in order to draw a single line per lane side.
+
+In these steps, I used the thershold suggested in the Quiz solutions. The main modification to the code provided was in the draw\_lines() function in order to draw a single line per lane side.
 
 **How I modified the draw\_lines() function:**
 
