@@ -47,20 +47,48 @@ My pipeline consisted of 5 steps:
 In these steps, I used the thershold suggested in the Quiz solutions. The main modification to the code provided was in the draw\_lines() function in order to draw a single line per lane side.
 
 **How I modified the draw\_lines() function:**
+  
+ I removed the line drawing from the loop over all the lines and replacing it by the averaging of both the slope of the lines and the positions of their center in order to draw online one line per side using the average slope and the center of center of lines. 
+ 
+ For each line betwen points (x1,y1) and (x2,y2), the slope a and the length d of the line are calculated: (see figure above for a visual representation of the variables)
+>  a= (y2-y1)/(x2-x1)
+>  d= math.hypot(y1-y2,x1-x2)
+ 
+ The slope is used to classify the line as part of the left lane line or the right lane line. And for each side, the sum of the slopes and the x and y positions of the centers of the lines are calculated. An example from the right side is:
+>  if a>0.25 :
+>       i_right += d
+>       a_right += a  * d
+>       y_right += y1 * d
+>       x_right += x1 * d
 
-MAKE FIGURE HERE!! 
+Note: The having a bigger than 0.25 or smaller than -0.25 instead of 0 helps remove lines perpendicular to the road from being used in the calculating the slope and position of the lane lines.
 
-The figure above summarizes the modification so that the rest of the text in this paragraph doesn't need to be read unless the figure doesn't convey the message. I removed the line drawing from the loop over all the lines and replacing it by the avergaing of both the slope of the lines and the positions of their center. For each line, the slope and the length of the line are calculated. The slope is used to classify the line as part of the left line or the right line. And for each side, the sum of the slopes and the x and y positions of the centers of the lines are calculated. Then, they are multiplied by the length of the line so that at the end, we obtain a line-length-weighted average of slopes and the positions of the centers of the lines. 
+ Multipling by the length of the line and adding it to i\_right is so that at the end, we can obtain a line-length-weighted average of slopes and the positions of the centers of the lines:
+> if i_right > 0: 
+>        a_right /= i_right
+>        y_right /= i_right
+>        x_right /= i_right
+>        b_right = y_right - a_right * x_right
+>        cv2.line(img, (int((imshape[0]-b_right)/a_right), imshape[0]), (int((y_min-b_right)/a_right),y_min), color, thickness)
 
+The if statement here makes sure there is at least one line detected as a right or left line so that we don't devide by zero.
 
-
+Finally, to draw the line, I solved for the x positions of the intersection of the calculated line with the bottom border of the image (imshape[0]) and with the line y= y\_min the upper end of the detected line that is closest to the top (and smallest y). 
 
 
 ### 2. Shortcomings with the pipeline described in 1.
 
+As I tried the above pipeline on the challenge video, I discovered that the lines detected where hectic because they were detecting edges in the asphalt. These edges are the edges between area of darker and lighter grey color probably due to the way the road was paved. Trees and shadows created more edges that confused the pipeline too. Please refer to the Jupyter notebook for the video example.
 
 
 ### 3. Improvements to your pipeline
+
+To remedy the shortcoming described in 2., I had to teach the pipeline to see in colors, in yellow and white particularly.
+
+
+    
+
+
 https://en.wikipedia.org/wiki/HSL_and_HSV#Hue_and_chroma
 http://docs.opencv.org/3.2.0/df/d9d/tutorial_py_colorspaces.html
 http://colorizer.org/
@@ -68,10 +96,7 @@ http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/p
 
 ### 4. Suggest possible improvement to your pipeline
 
-- automate cropping 
+The cropping step of the pipeline relies on the input of arbitrary points to delimit the area of interest. This area would be different from a system to another depending on the angle of the dashboard camera, the grade of the road, and the presence of obstacles like cars on the road. 
 
-
-A possible improvement would be to ...
-
-Another potential improvement could be to ...
+This step could instead be automated using a mask that looks for the parts of the image that 
 
