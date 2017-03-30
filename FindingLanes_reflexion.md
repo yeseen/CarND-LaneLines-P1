@@ -78,25 +78,38 @@ Finally, to draw the line, I solved for the x positions of the intersection of t
 
 ### 2. Shortcomings with the pipeline described in 1.
 
-As I tried the above pipeline on the challenge video, I discovered that the lines detected where hectic because they were detecting edges in the asphalt. These edges are the edges between area of darker and lighter grey color probably due to the way the road was paved. Trees and shadows created more edges that confused the pipeline too. Please refer to the Jupyter notebook for the video example.
+As I tried the above pipeline on the challenge video, I discovered that the lines detected where hectic because they were detecting edges in the asphalt. These edges are the edges between area of darker and lighter grey color probably due to the way the road was paved. Trees and shadows created more edges that confused the pipeline too. Please refer to the Jupyter notebook for the example video.
 
 
 ### 3. Improvements to your pipeline
 
 To remedy the shortcoming described in 2., I had to teach the pipeline to see in colors, in yellow and white particularly.
 
+For isolating the white part of the image, I use cv2.inRange to select pixels with the blue, red, and green values greater than 200.
+> image_white = cv2.inRange(image,np.array([200,200,200]),np.array([255,255,255]))
 
-    
+For the yellow part of the image, I had to first convert the image to the HSV representation of the colorspace. 
+>hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
 
+Then, I found out using online tools the "Hue" value of yellow which is 30, then I grabbed the pixels of the image that have Hue values betwen 20 and 40 and with at least a value of 100 for their "Chroma" and "Value".
+>image_yellow= cv2.inRange(hsv, np.array([20,100,100]),np.array([40,255,255])) 
 
-https://en.wikipedia.org/wiki/HSL_and_HSV#Hue_and_chroma
-http://docs.opencv.org/3.2.0/df/d9d/tutorial_py_colorspaces.html
-http://colorizer.org/
-http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_colorspaces/py_colorspaces.html
+I then run the canny detection algorithm seperately on each of the seperated images and combine them before cropping and drawing the lanes lines.
+
 
 ### 4. Suggest possible improvement to your pipeline
 
-The cropping step of the pipeline relies on the input of arbitrary points to delimit the area of interest. This area would be different from a system to another depending on the angle of the dashboard camera, the grade of the road, and the presence of obstacles like cars on the road. 
+One shoetcoming is that the right line lane is not continuous throughout the video. A possible improvement on this is to 
 
-This step could instead be automated using a mask that looks for the parts of the image that 
+Another shortcoming is the fact that the cropping step of the pipeline relies on the input of arbitrary points to delimit the area of interest. This area would be different from a system to another depending on the angle of the dashboard camera, the grade of the road, and the presence of obstacles like cars on the road. This step could instead be automated using a mask that looks for the parts of the image that 
+
+### Goals check
+
+The goals of this project were all DONE:
+* DONE: Make a pipeline that finds lane lines on the road
+* DONE: Test the pipeline on dashboard images
+* DONE: Apply the pipeline on dashboard videos
+* DONE: Improve on the pipeline to work with the challenge video
+* DONE: Suggest more improvements
+* DONE: Reflect on my work in this written report
 
