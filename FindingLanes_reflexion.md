@@ -9,6 +9,7 @@
 [image4]: ./steps_images/solidWhiteRight_canny.jpg "Edges"
 [image5]: ./steps_images/solidWhiteRight_crop.jpg "Cropped"
 [image6]: ./test_images_output/solidWhiteRight_output.jpg "solidWhiteCurve Output"
+[image7]: ./steps_images/slopevar.jpg "draw_lanes() figure"
 
 
 ---
@@ -50,6 +51,8 @@ In these steps, I used the thershold suggested in the Quiz solutions. The main m
   
  I removed the line drawing from the loop over all the lines and replacing it by the averaging of both the slope of the lines and the positions of their center in order to draw online one line per side using the average slope and the center of center of lines. 
  
+ ![alt text][image7]
+ 
  For each line betwen points (x1,y1) and (x2,y2), the slope a and the length d of the line are calculated: (see figure above for a visual representation of the variables)
 >  a= (y2-y1)/(x2-x1)
 >  d= math.hypot(y1-y2,x1-x2)
@@ -85,27 +88,27 @@ As I tried the above pipeline on the challenge video, I discovered that the line
 
 To remedy the shortcoming described in 2., I had to teach the pipeline to see in colors, in yellow and white particularly.
 
-For isolating the white part of the image, I use cv2.inRange to select pixels with the blue, red, and green values greater than 200.
+For isolating the white part of the image, I used cv2.inRange to select pixels having blue, red, and green values greater than 200.
 > image_white = cv2.inRange(image,np.array([200,200,200]),np.array([255,255,255]))
 
 For the yellow part of the image, I had to first convert the image to the HSV representation of the colorspace. 
 >hsv = cv2.cvtColor(image, cv2.COLOR_RGB2HSV)
 
-Then, I found out using online tools the "Hue" value of yellow which is 30, then I grabbed the pixels of the image that have Hue values betwen 20 and 40 and with at least a value of 100 for their "Chroma" and "Value".
+Then, I converted the yellow color values in RGB to HSV to find the "Hue" value of yellow which is 30. I grabbed the pixels of the image that have Hue values betwen 20 and 40 and with at least a value of 100 for their "Chroma" and "Value".
 >image_yellow= cv2.inRange(hsv, np.array([20,100,100]),np.array([40,255,255])) 
 
-I then run the canny detection algorithm seperately on each of the seperated images and combine them before cropping and drawing the lanes lines.
+I then run the canny detection algorithm seperately on each of the seperated images and combine them before cropping and drawing the lanes lines. This improvement worked as is shown in the output video on the jupyter notebook.
 
 
 ### 4. Suggest possible improvement to your pipeline
 
-One shoetcoming is that the right line lane is not continuous throughout the video. A possible improvement on this is to 
+One shoetcoming is that the right line lane is not continuous throughout the video. A possible improvement on this is to have the pipeline "remember" the last position of the lane so that it transitions smoothly between pixels. This can be done by averaging the new slope and position of the line of each frame with the previous few frames.
 
-Another shortcoming is the fact that the cropping step of the pipeline relies on the input of arbitrary points to delimit the area of interest. This area would be different from a system to another depending on the angle of the dashboard camera, the grade of the road, and the presence of obstacles like cars on the road. This step could instead be automated using a mask that looks for the parts of the image that 
+Another shortcoming is the fact that the cropping step of the pipeline relies on the input of arbitrary points to delimit the area of interest. This area would be different from a system to another depending on the angle of the dashboard camera, the grade of the road, and the presence of obstacles like cars on the road. This step could instead be automated using a mask that looks for the parts of the image that. 
 
 ### Goals check
 
-The goals of this project were all DONE:
+The goals of this project were all accomplished:
 * DONE: Make a pipeline that finds lane lines on the road
 * DONE: Test the pipeline on dashboard images
 * DONE: Apply the pipeline on dashboard videos
