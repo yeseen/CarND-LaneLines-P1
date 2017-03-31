@@ -20,7 +20,7 @@ The goals of this project are the following:
 * Make a pipeline that finds lane lines on the road
 * Test the pipeline on dashboard images
 * Apply the pipeline on dashboard videos
-* Improve on the pipeline to work with the challenge video
+* Improve on the pipeline and test with the challenge video
 * Suggest more improvements
 * Reflect on my work in this written report
 
@@ -41,11 +41,11 @@ My pipeline consisted of 5 steps:
 * Step 4: I crop the result a region of interest that removes the detected edges that are grossly off the road
 ![alt text][image5]
 
-* Step 5: I run a hough transform  to define the lines of edges and then draw a signle line for each side on the lane.
+* Step 5: I run a hough transform  to define the lines of edges and then draw a single line for each side on the lane.
 ![alt text][image6]
 
 
-In these steps, I used the thershold suggested in the Quiz solutions. The main modification to the code provided was in the draw\_lines() function in order to draw a single line per lane side.
+In these steps, I used the thersholds suggested in the Quiz solutions. The main modification to the code provided was in the draw\_lines() function in order to draw a single line per lane side.
 
 **How I modified the draw\_lines() function:**
   
@@ -78,10 +78,12 @@ The if statement here makes sure there is at least one line detected as a right 
 
 Finally, to draw the line, I solved for the x positions of the intersection of the calculated line with the bottom border of the image (imshape[0]) and with the line y= y\_min the upper end of the detected line that is closest to the top (and smallest y). 
 
+Please refer to the jupyter notebook P1.ipynb for the full script. Note that I haven't uploaded the source images and videos so running the cells on the notebook again would not work.
 
-### 2. Shortcomings with the pipeline described in 1.
 
-As I tried the above pipeline on the challenge video, I discovered that the lines detected where hectic because they were detecting edges in the asphalt. These edges are the edges between area of darker and lighter grey color probably due to the way the road was paved. Trees and shadows created more edges that confused the pipeline too. Please refer to the Jupyter notebook for the example video.
+### 2. Shortcomings of the pipeline described in 1.
+
+As I tried the above pipeline on the challenge video, I discovered that the lines detected were eclectic because they were detecting edges in the asphalt. These edges are the edges between area of darker and lighter grey color probably due to the way the road was paved. Trees and shadows created more edges that confused the pipeline too. Please refer to the Jupyter notebook for the example video.
 
 
 ### 3. Improvements to your pipeline
@@ -97,22 +99,22 @@ For the yellow part of the image, I had to first convert the image to the HSV re
 Then, I converted the yellow color values in RGB to HSV to find the "Hue" value of yellow which is 30. I grabbed the pixels of the image that have Hue values betwen 20 and 40 and with at least a value of 100 for their "Chroma" and "Value".
 >image_yellow= cv2.inRange(hsv, np.array([20,100,100]),np.array([40,255,255])) 
 
-I then run the canny detection algorithm seperately on each of the seperated images and combine them before cropping and drawing the lanes lines. This improvement worked as is shown in the output video on the jupyter notebook. Note that I haven't uploaded the source images and videos so running the cells on the notebook again would not work.
+I then run the canny detection algorithm seperately on each of the seperated images and combined them before cropping and drawing the lanes lines. This improvement worked as is shown in the output video on the jupyter notebook. 
 
 
 ### 4. Suggest possible improvement to your pipeline
 
-One shoetcoming is that the right line lane is not continuous throughout the video. A possible improvement on this is to have the pipeline "remember" the last position of the lane so that it transitions smoothly between pixels. This can be done by averaging the new slope and position of the line of each frame with the previous few frames.
+One shortcoming is that the right line lane on the challenge video is not continuous throughout the video. A possible improvement on this is to have the pipeline "remember" the last position of the lane so that it transitions smoothly between frames. This can be done by averaging new slopes and positions of the line of each new frame with the previous few frames.
 
-Another shortcoming is the fact that the cropping step of the pipeline relies on the input of arbitrary points to delimit the area of interest. This area would be different from a system to another depending on the angle of the dashboard camera, the grade of the road, and the presence of obstacles like cars on the road. This step could instead be automated using a mask that looks for the parts of the image that. 
+Another shortcoming is the fact that the cropping step of the pipeline relies on the input of arbitrary points to delimit the area of interest. This area would be different from a system to another depending on the angle of the dashboard camera, the grade of the road, and the presence of obstacles like cars on the road. This step could instead be automated using a mask that looks for the parts of the image that have the usual colors of a paved road. 
 
 ### Goals check
 
-    The goals of this project were all accomplished:
+The goals of this project were all accomplished:
 * DONE: Make a pipeline that finds lane lines on the road
 * DONE: Test the pipeline on dashboard images
 * DONE: Apply the pipeline on dashboard videos
-* DONE: Improve on the pipeline to work with the challenge video
+* DONE: Improve on the pipeline and test with the challenge video
 * DONE: Suggest more improvements
 * DONE: Reflect on my work in this written report
 
