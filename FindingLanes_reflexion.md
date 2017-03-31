@@ -97,7 +97,7 @@ For the yellow part of the image, I had to first convert the image to the HSV re
 Then, I converted the yellow color values in RGB to HSV to find the "Hue" value of yellow which is 30. I grabbed the pixels of the image that have Hue values betwen 20 and 40 and with at least a value of 100 for their "Chroma" and "Value".
 >image_yellow= cv2.inRange(hsv, np.array([20,100,100]),np.array([40,255,255])) 
 
-I then run the canny detection algorithm seperately on each of the seperated images and combine them before cropping and drawing the lanes lines. This improvement worked as is shown in the output video on the jupyter notebook.
+I then run the canny detection algorithm seperately on each of the seperated images and combine them before cropping and drawing the lanes lines. This improvement worked as is shown in the output video on the jupyter notebook. Note that I haven't uploaded the source images and videos so running the cells on the notebook again would not work.
 
 
 ### 4. Suggest possible improvement to your pipeline
@@ -108,7 +108,7 @@ Another shortcoming is the fact that the cropping step of the pipeline relies on
 
 ### Goals check
 
-The goals of this project were all accomplished:
+    The goals of this project were all accomplished:
 * DONE: Make a pipeline that finds lane lines on the road
 * DONE: Test the pipeline on dashboard images
 * DONE: Apply the pipeline on dashboard videos
